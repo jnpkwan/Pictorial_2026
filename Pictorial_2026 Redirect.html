@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!--
+  PICTORIAL SIGN-UP REDIRECT  ·  serves at jnpkwan.github.io/Pictorial_2026/
+  1. Deploy the booking app (see "Pictorial Booking — SETUP.md") and copy its Web app URL (ends in /exec).
+  2. Paste that URL into the TARGET line in the <script> below (between the quotes).
+  3. In your GitHub repo "Pictorial_2026", upload/replace this file as  index.html.
+  The Event Calendar already links here, so nothing on the calendar changes — ever.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chiew Reunion 2026 — Pictorial Sign-Up</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiMyQjRBNkYiLz48dGV4dCB4PSIxNiIgeT0iMjEiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLHNlcmlmIiBmb250LXNpemU9IjE2IiBmb250LXdlaWdodD0iNjAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjRjJFREUwIj5DPC90ZXh0Pjwvc3ZnPg==">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{background:#F2EDE0;color:#2A2521;font-family:'Jost','Century Gothic','Futura',system-ui,sans-serif;
+       display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;}
+  .eyebrow{font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:#9C7A14;font-weight:600;margin-bottom:10px;}
+  h1{font-family:'Cormorant Garamond','Cormorant',Georgia,serif;font-weight:300;font-size:42px;color:#2B4A6F;line-height:1.0;}
+  .msg{font-size:13px;color:#6E655C;margin-top:14px;animation:pulse 1.4s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.45;}}
+  a.go{display:inline-block;margin-top:18px;font-size:13px;font-weight:600;color:#B5534A;text-decoration:underline;}
+</style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">Chiew Reunion 2026</p>
+    <h1>Pictorial Sign&#8209;Up</h1>
+    <p class="msg" id="msg">Taking you to the sign&#8209;up page&hellip;</p>
+    <p><a class="go" id="go" href="#">Tap here if it doesn&rsquo;t open automatically &rarr;</a></p>
+  </main>
+  <script>
+    /* ▼▼▼  EDIT THIS ONE LINE — paste your Web app URL (ends in /exec) between the quotes  ▼▼▼ */
+    var TARGET = "https://script.google.com/macros/s/AKfycbxqQ15GxpMcmEykXQI4aUZyJjbtBJ1aesgfgu0q35MBFbNyqrM_BTk6fVasdP_63Wmv/exec";
+    /* ▲▲▲  e.g. https://script.google.com/macros/s/AKfy...../exec  ▲▲▲ */
+    (function () {
+      var go = document.getElementById('go'), msg = document.getElementById('msg');
+      if (/^https?:\/\//.test(TARGET)) {
+        go.href = TARGET;
+        window.location.replace(TARGET);
+      } else {
+        msg.style.animation = 'none';
+        msg.textContent = 'Sign-up link not set up yet — please check back shortly.';
+        go.style.display = 'none';
+      }
+    })();
+  </script>
+  <noscript><p class="msg">Please tap the link above to open the sign-up page.</p></noscript>
+</body>
+</html>
