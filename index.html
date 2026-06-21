@@ -178,11 +178,27 @@ textarea{min-height:70px;resize:vertical;line-height:1.5;}
 <script>
 var CFG = null;
 var SUFFIX = { sunset:'PM', morning:'AM' };
+// Live only when served by the Apps Script web app; false when opened as a plain file.
+var IS_LIVE = (typeof google !== 'undefined' && google.script && google.script.run);
+// Used only for local preview (so you can see the layout before deploying).
+var PREVIEW_CFG = { pictorials:{
+  sunset:{label:'Sunset Beach Pictorial',when:'Saturday, Aug 8 · 4:30–5:30 PM',where:'Pearl Farm Poolside · golden-hour photos',suffix:'PM',slots:['4:30','4:40','4:50','5:00','5:10','5:20']},
+  morning:{label:'Morning Beach Pictorial',when:'Sunday, Aug 9 · 8:00–10:00 AM',where:'Beachfront · soft morning light',suffix:'AM',slots:['8:00','8:10','8:20','8:30','8:40','8:50','9:00','9:10','9:20','9:30','9:40','9:50']}
+}, taken:{sunset:[],morning:[]}, paletteLink:'' };
 
 function endTime(t){ var p=t.split(':'),h=+p[0],m=+p[1]+10; if(m>=60){m-=60;h++;} return h+':'+(m<10?'0'+m:m); }
 
-window.onload = function(){ google.script.run.withSuccessHandler(init).withFailureHandler(loadErr).getConfig(); };
+window.onload = function(){
+  if (IS_LIVE) { google.script.run.withSuccessHandler(init).withFailureHandler(loadErr).getConfig(); }
+  else { init(PREVIEW_CFG); showPreviewBanner(); }
+};
 function loadErr(){ document.getElementById('loading').innerHTML='<p style="color:#B5534A;">Couldn’t load slots. Please refresh.</p>'; }
+function showPreviewBanner(){
+  var b=document.createElement('div');
+  b.style.cssText='background:#FCF3D6;border:1px solid #C8A020;color:#7a6310;border-radius:10px;padding:12px 16px;font-size:13px;margin-bottom:18px;text-align:center;';
+  b.innerHTML='<b>Preview mode.</b> This is just the layout — booking turns on once it’s deployed as the Apps Script web app.';
+  var f=document.getElementById('form'); f.parentNode.insertBefore(b,f);
+}
 
 function init(cfg){
   CFG = cfg;
@@ -244,6 +260,13 @@ function submitForm(){
     notes:document.getElementById('notes').value.trim(),
     picks:picks
   };
+  if(!IS_LIVE){
+    var np=document.getElementById('notice');
+    np.style.cssText='background:#FCF3D6;border:1px solid #C8A020;color:#7a6310;border-radius:10px;padding:12px 16px;font-size:13px;margin-bottom:18px;display:block;';
+    np.textContent='Preview mode — booking is disabled until the app is deployed. Your selections look good!';
+    np.scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
   var btn=document.getElementById('btn'); btn.disabled=true; btn.textContent='Saving…';
   google.script.run.withSuccessHandler(onBooked).withFailureHandler(onErr).book(data);
 }
