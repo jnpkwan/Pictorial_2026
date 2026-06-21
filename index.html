@@ -119,26 +119,6 @@ textarea{min-height:70px;resize:vertical;line-height:1.5;}
       <input type="text" id="mobile" placeholder="So we can reach you if a slot opens or shifts" autocomplete="tel">
     </div>
 
-    <div class="row">
-      <label class="fld">Number of People</label>
-      <input type="number" id="party" min="1" max="60" placeholder="How many in the photo?">
-    </div>
-
-    <div class="row">
-      <label class="fld">Who&rsquo;s in the Shot</label>
-      <input type="text" id="who" placeholder="Names or which families / branches">
-    </div>
-
-    <div class="row">
-      <label class="fld">Generations in the Photo</label>
-      <div class="gens" id="gens">
-        <label class="gen"><input type="checkbox" value="2nd Gen"><span>2nd Gen</span></label>
-        <label class="gen"><input type="checkbox" value="3rd Gen"><span>3rd Gen</span></label>
-        <label class="gen"><input type="checkbox" value="4th Gen"><span>4th Gen</span></label>
-        <label class="gen"><input type="checkbox" value="5th Gen"><span>5th Gen</span></label>
-      </div>
-    </div>
-
     <!-- SUNSET -->
     <div class="seclabel"><span class="dot" style="background:var(--gold)"></span><span class="t" id="t-sunset">Sunset Beach Pictorial</span><span class="rule"></span></div>
     <p class="secmeta" id="m-sunset"></p>
@@ -151,7 +131,7 @@ textarea{min-height:70px;resize:vertical;line-height:1.5;}
     <div class="err" id="err-slot">Pick a slot for at least one pictorial (or tap Skip on both if you&rsquo;re not joining).</div>
 
     <div class="row" style="margin-top:30px;">
-      <label class="check"><input type="checkbox" id="mobilityChk"> <span>Someone in our group needs seating or a hand getting around (we&rsquo;ll be photographed first).</span></label>
+      <label class="check"><input type="checkbox" id="mobilityChk"> <span>Someone in our group needs seating or a hand getting around.</span></label>
       <input type="text" id="mobility" placeholder="Any detail? (optional)" style="margin-top:8px;display:none;">
     </div>
 
@@ -232,6 +212,7 @@ function renderSlots(k){
   box.appendChild(skip);
 }
 
+function sectionOpen(k){ var p=CFG.pictorials[k], taken=CFG.taken[k]||[]; return p.slots.some(function(s){return taken.indexOf(s)<0;}); }
 function submitForm(){
   var name=document.getElementById('name').value.trim();
   var color=document.getElementById('color').checked;
@@ -244,16 +225,19 @@ function submitForm(){
   var ok=true;
   document.getElementById('err-name').classList.toggle('show',!name); if(!name) ok=false;
   document.getElementById('err-color').classList.toggle('show',!color); if(!color) ok=false;
-  document.getElementById('err-slot').classList.toggle('show',picks.length===0); if(picks.length===0) ok=false;
+  // Each pictorial that still has open slots is required — a slot OR Skip must be chosen.
+  var needAnswer = (sectionOpen('sunset') && !sunsetSel) || (sectionOpen('morning') && !morningSel);
+  var noBooking = picks.length===0;
+  var es=document.getElementById('err-slot');
+  es.textContent = needAnswer
+    ? 'Please choose a slot — or tap Skip — for each pictorial.'
+    : 'You’ve skipped both — pick a slot for at least one pictorial to book.';
+  es.classList.toggle('show', needAnswer || noBooking); if(needAnswer || noBooking) ok=false;
   if(!ok){ var e=document.querySelector('.err.show'); if(e) e.scrollIntoView({behavior:'smooth',block:'center'}); return; }
 
-  var gens=[].map.call(document.querySelectorAll('#gens input:checked'),function(c){return c.value;}).join(', ');
   var data={
     name:name,
     mobile:document.getElementById('mobile').value.trim(),
-    party:document.getElementById('party').value.trim(),
-    who:document.getElementById('who').value.trim(),
-    gens:gens,
     mobility:document.getElementById('mobilityChk').checked ? ('Yes — '+(document.getElementById('mobility').value.trim()||'needs seating/assistance')) : '',
     color:color,
     album:document.getElementById('album').checked,
